@@ -4,6 +4,10 @@
 
 A bash script to automate the restoration of a virtual machine that has been backed up with the VM-Backup plugin on a Unraid server
 
+## How it works?
+
+<https://www.youtube.com/watch?v=OIQKQPqLUfw>
+
 ## Why?
 
 The VM Backup plugin is really great it allows you to make backups of your virtual machines, but at the moment it is not possible to restore a backup from the Unraid web interface. That's why I decided to create a small script to automate the restoration of a backup.
