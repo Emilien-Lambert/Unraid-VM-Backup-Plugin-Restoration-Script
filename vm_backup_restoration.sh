@@ -47,8 +47,7 @@ get_informations() {
 	printf "\n"
 
 	printf "${BOLD}Enter path of virtual machine backup folder, for eg:${RESET}\n"
-	printf "/mnt/user/PATH_BACKUP_FOLDER/ubuntu\n"
-	printf "/mnt/user/PATH_BACKUP_FOLDER/windows10\n"
+	printf "/mnt/user/John-Doe/my_backup_folder\n"
 	printf "...\n"
 	printf "\nPath without the last / like this: \n"
 	printf "${BLUE}/mnt/user/PATH_BACKUP_FOLDER${RESET}\n\n"
