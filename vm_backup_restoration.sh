@@ -42,7 +42,7 @@ get_informations() {
 	printf "${RED}1) On the dashboard, delete your VM if it still exists ('Remove VM & Disks)'${RESET}\n"
 	printf "${RED}2) Make sure all VMs are shut down'${RESET}\n"
 	printf "${RED}3) Make sure your VMs Manager is turned ON before launching this operation.${RESET}\n"
-	printf "${RED}   (settigns => VM Manager => Enable VMs: Yes)${RESET}"
+	printf "${RED}   (settings => VM Manager => Enable VMs: Yes)${RESET}"
 	print_separator
 	printf "\n"
 
