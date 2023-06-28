@@ -86,13 +86,13 @@ restore_backup() {
 	printf "mkdir /mnt/user/domains/$VM_NAME\n\n"
 	mkdir "/mnt/user/domains/$VM_NAME"
 
-	BACKUP_FILE=$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img*")
+	BACKUP_FILE="$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img*")"
 
 	if [[ "$BACKUP_FILE" == *".zst" ]]; then
 		printf "${BOLD}Extracting backup file${RESET}\n"
 		printf "unzstd -C "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img.zst"\n"
 		unzstd -C "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img.zst"
-		BACKUP_FILE=$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img")
+		BACKUP_FILE="$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img")"
 		printf "${GREEN}!! Extraction finished !!${RESET}\n\n"
 	fi
 
@@ -107,13 +107,13 @@ restore_backup() {
 	fi
 
 	printf "${BOLD}Copy .xml file${RESET}\n"
-	BACKUP_FILE=$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_${VM_NAME}.xml")
+	BACKUP_FILE="$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_${VM_NAME}.xml")"
 	printf "cp "$BACKUP_FILE" /etc/libvirt/qemu/"$VM_NAME".xml\n"
 	cp "$BACKUP_FILE" /etc/libvirt/qemu/"$VM_NAME".xml
 	printf "${GREEN}!! Copy finished !!${RESET}\n\n"
 
 	printf "${BOLD}Copy _VARS-pure-efi.fd file${RESET}\n"
-	BACKUP_FILE=$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}*_VARS-pure-efi.fd")
+	BACKUP_FILE="$(echo "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}*_VARS-pure-efi.fd")"
 	CLEAN_BACKUP_FILE=${BACKUP_FILE:${#PATH_BACKUP_FOLDER}+${#VM_NAME}+${#BACKUP_DATE}+3}
 	# +3 because there are two / and one _ in the file name
 	printf "cp "$BACKUP_FILE" /etc/libvirt/qemu/nvram/"$CLEAN_BACKUP_FILE"\n"
