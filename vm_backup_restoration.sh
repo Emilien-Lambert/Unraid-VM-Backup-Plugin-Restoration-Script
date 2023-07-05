@@ -36,9 +36,9 @@ print_separator() {
 }
 
 
-get_informations() {
+get_information() {
 	print_separator
-	echo -e "${RED}Make sure the informations is correct this script does not check errors.${RESET}\n"
+	echo -e "${RED}Make sure the information's is correct this script does not check errors.${RESET}\n"
 	echo -e "${RED}Please check this before continuing.${RESET}"
 	echo -e "${RED}1) On the dashboard, delete your VM if it still exists ('Remove VM & Disks)'${RESET}"
 	echo -e "${RED}2) Make sure all VMs are shut down'${RESET}"
@@ -121,7 +121,7 @@ restore_backup() {
 	echo -e "${GREEN}!! Copy finished !!${RESET}\n"
 
 	echo -e "${BOLD}Copy _VARS-pure-efi.fd file${RESET}"
-	BACKUP_FILE="$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}*_VARS-pure-efi.fd"
+	BACKUP_FILE=$(find "$PATH_BACKUP_FOLDER/$VM_NAME" -name "${BACKUP_DATE}*_VARS-pure-efi.fd" -print -quit)
 	CLEAN_BACKUP_FILE=${BACKUP_FILE:${#PATH_BACKUP_FOLDER}+${#VM_NAME}+${#BACKUP_DATE}+3}
 	# +3 because there are two / and one _ in the file name
 	echo -e "cp $BACKUP_FILE /etc/libvirt/qemu/nvram/$CLEAN_BACKUP_FILE"
@@ -133,7 +133,7 @@ restore_backup() {
 # Main
 ###
 
-get_informations
+get_information
 restore_backup
 
 print_separator
