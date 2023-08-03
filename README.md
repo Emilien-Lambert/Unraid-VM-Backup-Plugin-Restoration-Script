@@ -6,6 +6,8 @@ A bash script to automate the restoration of a virtual machine that has been bac
 
 ## How it works?
 
+(For Windows VMs, it may be necessary to rename the _VARS-pure-efi-tpm.fd files and remove "tpm")
+
 [![How to restore an Unraid virtual machine automatically](https://img.youtube.com/vi/OIQKQPqLUfw/0.jpg)](http://www.youtube.com/watch?v=OIQKQPqLUfw)
 
 ## Why?
