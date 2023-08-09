@@ -20,7 +20,7 @@ http://www.youtube.com/watch?v=OIQKQPqLUfw
 #### Enter the following commands:
 
 ```bash
-cd /mnt/user/
+cd /mnt/user/SHARE NAME/BACKUP FOLDER
 git clone https://github.com/Emilien-Lambert/Unraid-VM-Backup-Plugin-Restoration-Script.git
 ```
 This will clone the script to your backup folder.
@@ -42,7 +42,7 @@ This will begin the script.
 
 #### Enter the path of VM backups.
 
-- Example: /mnt/user/VMs
+- Example: /mnt/user/SHARE NAME/BACKUP FOLDER/VMs
 
 #### Enter name of VM you wish to restore.
 
