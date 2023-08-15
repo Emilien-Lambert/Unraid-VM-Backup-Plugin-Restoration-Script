@@ -83,50 +83,56 @@ get_information() {
 }
 
 restore_backup() {
-	echo -e "${BOLD}Creation VM folder in domains directory${RESET}"
-	echo -e "mkdir /mnt/user/domains/$VM_NAME\n"
+  echo -e "${BOLD}Creation VM folder in domains directory${RESET}"
+  echo -e "mkdir /mnt/user/domains/$VM_NAME\n"
   mkdir -p /mnt/user/domains/"$VM_NAME"
 
   BACKUP_FILES=("$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img"*)
   if [[ -e ${BACKUP_FILES[0]} ]]; then
-      BACKUP_FILE="${BACKUP_FILES[0]}"
+    BACKUP_FILE="${BACKUP_FILES[0]}"
   else
-      echo "Backup file not found: $BACKUP_FILE"
-      exit 1
+    echo "Backup file not found: $BACKUP_FILE"
+    exit 1
   fi
 
+  if [[ "$BACKUP_FILE" == *"_vdisk1.img.zst" ]] || [[ "$BACKUP_FILE" == *"_vdisk1.qcow2.zst" ]]; then
+    echo -e "${BOLD}Extracting backup file${RESET}"
+    # Extract the file extension (either img or qcow2)
+    if [[ "$BACKUP_FILE" == *"_vdisk1.img.zst" ]]; then
+      FILE_EXTENSION="img"
+    else
+      FILE_EXTENSION="qcow2"
+    fi
+    echo -e "unzstd -C $PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.${FILE_EXTENSION}.zst"
+    unzstd -C "$BACKUP_FILE"
+    BACKUP_FILE="$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.${FILE_EXTENSION}"
+    echo -e "${GREEN}!! Extraction finished !!${RESET}\n"
+  fi
 
-	if [[ "$BACKUP_FILE" == *".zst" ]]; then
-		echo -e "${BOLD}Extracting backup file${RESET}"
-		echo -e "unzstd -C $PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img.zst"
-		unzstd -C "$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img.zst"
-		BACKUP_FILE="$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_vdisk1.img"
-		echo -e "${GREEN}!! Extraction finished !!${RESET}\n"
-	fi
+  if [[ "$BACKUP_FILE" == *".img" ]] || [[ "$BACKUP_FILE" == *".qcow2" ]]; then
+    echo -e "${BOLD}Copy backup file to domains folder${RESET}"
+    echo -e "cp $BACKUP_FILE /mnt/user/domains/$VM_NAME/vdisk1.${FILE_EXTENSION}"
+    cp "$BACKUP_FILE" "/mnt/user/domains/$VM_NAME/vdisk1.${FILE_EXTENSION}"
+    echo -e "${GREEN}!! Copy finished !!${RESET}\n"
+  else
+    echo -e "${RED}!!! Backup file not found !!!${RESET}\n\a"
+    exit 1
+  fi
 
-	if [[ "$BACKUP_FILE" == *".img" ]]; then
-		echo -e "${BOLD}Copy backup file to domains folder${RESET}"
-		echo -e "cp $BACKUP_FILE /mnt/user/domains/$VM_NAME/vdisk1.img"
-		cp "$BACKUP_FILE" "/mnt/user/domains/$VM_NAME/vdisk1.img"
-		echo -e "${GREEN}!! Copy finished !!${RESET}\n"
-	else
-		echo -e "${RED}!!! Backup file not found !!!${RESET}\n\a"
-		exit 1
-	fi
+  echo -e "${BOLD}Copy .xml file${RESET}"
+  BACKUP_FILE="$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_${VM_NAME}.xml"
+  echo -e "cp $BACKUP_FILE /etc/libvirt/qemu/$VM_NAME.xml"
+  cp "$BACKUP_FILE" "/etc/libvirt/qemu/$VM_NAME.xml"
+  echo -e "${GREEN}!! Copy finished !!${RESET}\n"
 
-	echo -e "${BOLD}Copy .xml file${RESET}"
-	BACKUP_FILE="$PATH_BACKUP_FOLDER/$VM_NAME/${BACKUP_DATE}_${VM_NAME}.xml"
-	echo -e "cp $BACKUP_FILE /etc/libvirt/qemu/$VM_NAME.xml"
-	cp "$BACKUP_FILE" "/etc/libvirt/qemu/$VM_NAME.xml"
-	echo -e "${GREEN}!! Copy finished !!${RESET}\n"
-
-	echo -e "${BOLD}Copy _VARS-pure-efi.fd file${RESET}"
-	BACKUP_FILE=$(find "$PATH_BACKUP_FOLDER/$VM_NAME" -name "${BACKUP_DATE}*_VARS-pure-efi.fd" -print -quit)
-	CLEAN_BACKUP_FILE=${BACKUP_FILE:${#PATH_BACKUP_FOLDER}+${#VM_NAME}+${#BACKUP_DATE}+3}
-	# +3 because there are two / and one _ in the file name
-	echo -e "cp $BACKUP_FILE /etc/libvirt/qemu/nvram/$CLEAN_BACKUP_FILE"
-	cp "$BACKUP_FILE" "/etc/libvirt/qemu/nvram/$CLEAN_BACKUP_FILE"
-	echo -e "${GREEN}!! Copy finished !!${RESET}\n"
+  echo -e "${BOLD}Copy _VARS-pure-efi.fd file${RESET}"
+  BACKUP_FILE=$(find "$PATH_BACKUP_FOLDER/$VM_NAME" -name "${BACKUP_DATE}*_VARS-pure-efi*.fd" -print -quit)
+  CLEAN_BACKUP_FILE=${CLEAN_BACKUP_FILE/-tpm.fd/.fd}
+  CLEAN_BACKUP_FILE=${BACKUP_FILE:${#PATH_BACKUP_FOLDER}+${#VM_NAME}+${#BACKUP_DATE}+3}
+  # +3 because there are two / and one _ in the file name
+  echo -e "cp $BACKUP_FILE /etc/libvirt/qemu/nvram/$CLEAN_BACKUP_FILE"
+  cp "$BACKUP_FILE" "/etc/libvirt/qemu/nvram/$CLEAN_BACKUP_FILE"
+  echo -e "${GREEN}!! Copy finished !!${RESET}\n"
 }
 
 ###
